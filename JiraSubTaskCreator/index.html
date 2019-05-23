@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="background.js"></script>
+		<script src="clipboard.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">		
+    </head>
+    <body class="default">
+        <form id="addbookmark" style="height= 560px" class="dark-matter ">
+		<table class="table-custom">
+			<tr>
+				<td>
+					<span>Project:</span>
+				</td>
+				<td>
+					<span>Number*:</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<select id="projects" >
+						<option name="proj" value="IV">IV</option>
+						<option name="proj" value="DIS">DIS</option>
+						<option name="proj" value="SN">SN</option>
+						<option name="proj" value="HADM">HADM</option>			  
+						<option name="proj" value="SPIKE">SPIKE</option>
+						<option name="proj" value="IDEA">IDEA</option>
+						<option name="proj" value="IS">IS</option>
+						<option name="proj" value="V4F">V4F</option>
+						<option name="proj" value="VR">VR</option>			  
+						<option name="proj" value="ASURIONV4">ASURIONV4</option>
+						<option name="proj" value="V3">V3</option>
+						<option name="proj" value="POP">POP</option>
+						<option name="proj" value="DOPSON">DOPSON</option>
+					</select>
+				</td>
+				<td>
+					<input type="text" name="iv">
+				</td>
+			</tr>
+		</table>
+			<div class="dark-matter checkboxes">
+			
+			<table class="table-custom">
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="QA-Prep" value="QA Prep" checked>QA Prep </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="qaprep" name="QA Prep" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="QA-Exec" value="QA Exec" checked>QA Exec  </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="qaexec" name="QA Exec" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="Unit-Tests" value="Unit Tests" checked>Unit Tests </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="unittest" name="Unit Tests" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="Show-And-Tell" value="Show And Tell" checked>Show And Tell </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="showandtell" name="Show And Tell" value="0.25"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="Code-Review" value="Code Review & Merge" checked>Code Review </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="codeReview" name="Code Review & Merge" value="0.5" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="Test-Case-Review" value="Test Case Review" checked>Test Case Review </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="testCaseReview" name="Test Case Review" value="0.25" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="Unit-Test-Review" value="Unit Test Review" checked>Unit Test Review </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="unitTestReview" name="Unit Test Review" value="0.25"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="OWASP" value="OWASP" checked>OWASP </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="owasp" name="OWASP" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="t" id="Automated-Test" value="Automated Test" >Automated Test </input>
+					</td>
+					<td>
+						<input class="checkText" type="text" id="automatedTest" name="Automated Test" value="0"/>
+					</td>
+				</tr>
+				<tr style="display: none;">
+					<td>
+						<input  type="checkbox" name="t" id="Other" value="Other" checked>Other*: </input>
+					</td>
+				</tr>
+			</table>
+
+			<input type="text" class="otherTask" id="otherTask">
+			<br>
+			<span style="font-size: x-small">(* use ';' separator for multiple items)</span>
+			</div>
+
+			<span>Agile Team:</span><select id="teams" class="agileTeam">
+			  <option name="team" value=""></option>
+			  <option name="team" value="10201">Green Team</option>
+			  <option name="team" value="10202" id="LightBlue">Light Blue Team</option>
+			  <option name="team" value="10202" id="DarkBlue">Dark Blue Team</option>
+			  <option name="team" value="10200">Red Team</option>
+			  <option name="team" value="12300">Orange Team</option>
+			  <option name="team" value="10600">Yellow Team</option>
+			</select>
+			<br>			
+			
+			<div id="myProgress">
+				<input type="button" class="defaultColor button clip" id="checkPage" value="Create Sub-Tasks">
+				<div id="myBar" class="defaultColor"></div>
+			</div>		
+
+			<br>
+			<span>Choose Template:</span><select id="templates" class="agileTeam">
+			  <option name="team" value=""></option>
+			  <option name="team" value="story">Story Template</option>
+			  <option name="team" value="cloudStory">Cloud Story Template</option>
+			  <option name="team" value="task">Task Template</option>
+			  <option name="team" value="bug">Bug Template</option>
+			</select>
+			<br>	
+<!-- Trigger -->
+<button style="margin-top: 7px" id="story" name="temp" class="defaultColor btn button" data-clipboard-text="{panel:title=(i) *User Statement*}
+*AS* 
+*I WANT*
+*So THAT*
+{panel}
+{panel:title=(!) *Description* }
+(?)
+{panel}
+{panel:title=(!) *Acceptance Criteria*}
+|| ||Given||When||Outcome||
+|1|(?)|(?)|(?)|
+|2| | | |
+|3| | | |
+|4| | | |
+|5| | | |
+{panel}
+{panel:title=(i) *Scope*}
+||In Scope||Out of Scope||
+| | |
+| | |
+| | |
+{panel}
+----
+----
+----
+{panel:title=(!) *Implementation Details*}
+* (?)
+{panel}
+{panel:title=(i) *Adapter*}
+||Task||Strategy||Stage||Return||||
+| | | | |
+| | | | |
+{panel}
+{panel:title=(i) *Schema*}
+||Desired Value||Description||Location||Model||Property||
+| | | | | |
+| | | | | |
+| | | | | |
+| | | | | |
+| | | | | |
+{panel}">
+    Story Template to Clipboard
+</button>
+
+<button style="margin-top: 7px" id="cloudStory" name="temp" class="defaultColor btn button" data-clipboard-text="{panel:title=(i) *User Statement*}
+*AS* 
+*I WANT*
+*So THAT*
+{panel}
+{panel:title=(!) *Description* }
+(?)
+{panel}
+{panel:title=(!) *Acceptance Criteria*}
+|| ||Given||When||Outcome||
+|1|(?)|(?)|(?)|
+|2| | | |
+|3| | | |
+|4| | | |
+|5| | | |
+{panel}
+{panel:title=(i) *Scope*}
+||In Scope||Out of Scope||
+| | |
+| | |
+| | |
+{panel}
+----
+----
+----
+{panel:title=(!) *Implementation Details*}
+* (?)
+{panel}">
+    Cloud Template to Clipboard
+</button>
+
+<button style="margin-top: 7px" id="task" name="temp" class="defaultColor btn button" data-clipboard-text="{panel:title=(!) *Description* }
+(?)
+{panel}
+{panel:title=(!) *Acceptance Criteria*}
+|| ||Given||When||Outcome||
+|1|(?)|(?)|(?)|
+|2| | | |
+|3| | | |
+|4| | | |
+|5| | | |
+{panel}
+{panel:title=(i) *Scope*}
+||In Scope||Out of Scope||
+| | |
+| | |
+| | |
+{panel}
+----
+----
+----
+{panel:title=(!) *Implementation Details*}
+* (?)
+{panel}">
+    Task Template to Clipboard
+</button>
+
+<button style="margin-top: 7px" id="bug" name="temp" class="defaultColor btn button" data-clipboard-text="{panel:title=(!) *Description* }
+(?)
+{panel}
+{panel:title=(!) *Acceptance Criteria*}
+|| ||Given||When||Outcome||
+|1|(?)|(?)|(?)|
+|2| | | |
+|3| | | |
+|4| | | |
+|5| | | |
+{panel}
+----
+----
+----
+{panel:title=(!) *Implementation Details*}
+* (?)
+{panel}">
+    Bug Template to Clipboard
+</button>
+
+        </form>
+    </body>
+</html>
