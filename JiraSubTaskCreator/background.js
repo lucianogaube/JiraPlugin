@@ -4,12 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	var clipboard2 = new Clipboard('.clip');
 	
 	var createButton = document.getElementById('checkPage');
-	var dropdownlist = document.getElementById("teams");
 	var dropdownTemplates = document.getElementById("templates");
 	var textToSpreadsheet = "";
 	
 	//can be used for the calculateHours method
-	var QATasks = new Set(["QA Prep", "QA Prep", "Show And Tell", "OWASP", "Unit Test Review"]);
+	var QATasks = new Set(["QA Prep", "QA Exec", "Show And Tell", "OWASP", "Unit Test Review"]);
 	
 	//Template button will change according to selection
 	dropdownTemplates.addEventListener('click', function() {
@@ -70,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		createButton.setAttribute("data-clipboard-text", textToSpreadsheet);
 	}
 	
-	//For custom sub-tasks youc an input the summary as "My Custom task (10)" 
+	//For custom sub-tasks you can input the summary as "My Custom task (10)" 
 	//It will count the number inside the parenthesis and calculate the time as a Dev task
 	function getCustomTaskTime(taskName){
-		var res = taskName.match(/\(([0-9]\d+)\)/);
+		var res = taskName.match(/\(([0-9]+)\)/);
 		if(res === null) return ""
 
 		return res[1];
@@ -110,22 +109,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	createButton.addEventListener('click', function() {
 		//this can be uncommented to calculate the hours of the sub-tasks
 		//calculateHours(); 
-		createButton.disabled = true;
+		var form = document.getElementById("addbookmark");
+		var isValidForm = form.checkValidity();		
 		var subTasks = document.getElementsByName("t");
-		var parent = document.getElementsByName("iv");
-		var team = document.getElementById("teams");
-		var proj = document.getElementById("projects");
-		var selectedTeam = team.options[team.selectedIndex].value;
-		var selectedTeamId = team.options[team.selectedIndex].id;
-		var selectedProject = proj.options[proj.selectedIndex].value;
+		var parent = document.getElementById("iv");
+		var project = document.getElementById("proj").value;
 		var other = document.getElementById("otherTask");
 		var otherSubs = other.value.split(';');
-		var stories = parent[0].value.split(';');
+		var stories = parent.value.split(';');
 		var request = new XMLHttpRequest();
+		var error = document.querySelector('.error');
+		
+		createButton.disabled = true;
+		
+		if (!isValidForm) {    
+			createButton.disabled = false;
+			form.reportValidity();
+		}
 		
 		request.open("POST","https://iquate.atlassian.net/rest/api/2/issue/bulk",true);
 		request.setRequestHeader("Content-type","application/json");
 		var resp = {"issueUpdates":[]};
+		
+		if(project == "" || stories[0] == "") return false;
 		
 		stories.forEach(story => {
 			if(story == "") return;
@@ -140,11 +146,10 @@ document.addEventListener('DOMContentLoaded', function() {
 						resp.issueUpdates.push({
 							"fields":
 							{
-								"project":{"key":selectedProject},
+								"project":{"key":project},
 								"summary":otherSub,
 								"issuetype":{"name":"Sub-task"},
-								"labels":[selectedTeamId],
-								"parent":{"key":selectedProject + "-" + story} //Custom fields can be added here as a new property
+								"parent":{"key":project + "-" + story} //Custom fields can be added here as a new property
 							}
 						});													
 					});							
@@ -158,11 +163,10 @@ document.addEventListener('DOMContentLoaded', function() {
 					resp.issueUpdates.push({
 						"fields":
 						{
-							"project":{"key":selectedProject},
+							"project":{"key":project},
 							"summary":subTask.value, // + subTaskTime, (this is part of the calculation)
 							"issuetype":{"name":"Sub-task"},
-							"labels":[subTask.id, selectedTeamId],
-							"parent":{"key":selectedProject + "-" + story} //Custom fields can be added here as a new property
+							"parent":{"key":project + "-" + story} //Custom fields can be added here as a new property
 						}
 					});
 				}				
