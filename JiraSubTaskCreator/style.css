@@ -11,7 +11,7 @@
     margin-right: auto;
     max-width: 500px;
     background: #595959;
-    padding: 3px 14px 7px 30px;
+    padding: 3px 0px 10px 18px;
     font: 14px "Calibri", Calibri, Arial, sans-serif;
 	text-shadow: 1px 1px 1px #444;
 	font-weight: bold;
@@ -54,7 +54,7 @@
     margin-top: 2px;
     outline: 0 none;
     padding: 5px 0px 5px 5px;
-    width: 85px;
+    width: 72px;
     border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -63,8 +63,7 @@
 	font-weight: bold;
 }
 .dark-matter select {
-    background: #d8d8d8 url('down-arrow.png') no-repeat right;
-    background: #d8d8d8 url('down-arrow.png') no-repeat right;
+	background: #d8d8d8 url('down-arrow.png') no-repeat right;
     appearance:none;
     -webkit-appearance:none; 
     -moz-appearance: none;
@@ -82,11 +81,9 @@
     width: 70%;
 }
 
-.dark-matter .button {
-    
+.dark-matter .button {    
     border: none;
-    padding: 10px 25px 10px 25px;
-    
+    padding: 10px 25px 10px 25px;    
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -109,20 +106,57 @@
 }
 
 #myProgress {
-  width: 159px;
-  background-color: #595959;
+	width: 159px;
+	background-color: #595959;
+}
+
+.subtasks{
+	font-size: 17px !important;
+}
+
+input:invalid {
+  border: 2px dashed red;
+}
+
+/* This is the style of our error messages */
+.error {
+  width  : 100%;
+  padding: 0;
+ 
+  font-size: 80%;
+  color: white;
+  background-color: #900;
+  border-radius: 0 0 5px 5px;
+ 
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.error.active {
+  padding: 0.3em;
 }
 
 #myBar {
-  width: 0%;
-  height: 35px;
-  text-align: center;
-  line-height: 35px;
-  color: white;
-  position: relative;
-  left: 100;
-  top:8px !important;
-  z-index: 1001;
+	width: 0%;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	color: white;
+	position: relative;
+	left: 100;
+	top:8px !important;
+	z-index: 1001;
+}
+
+.title{
+	color: #ffffff;
+	font-size: large;
+	text-shadow: .1em .1em rgba(0, 0, 0, 0.3);
+}
+.subtitle{
+	color: #ffffff;
+	font-size: x-small;
+	margin-left: 82px;
 }
 
 .otherTask{
