@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+
 	//For the template copy to clipboard
 	var clipboard = new Clipboard('.btn');
 	var clipboard2 = new Clipboard('.clip');
-	
+	var urlRequest;
+	var templateURL = "https://(domain).atlassian.net/rest/api/2/issue/bulk";
 	var createButton = document.getElementById('checkPage');
 	var dropdownTemplates = document.getElementById("templates");
 	var textToSpreadsheet = "";
@@ -10,6 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	//can be used for the calculateHours method
 	var QATasks = new Set(["QA Prep", "QA Exec", "Show And Tell", "OWASP", "Unit Test Review"]);
 	
+	chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {		
+		urlRequest = getCorrectUrl(tabs[0]);
+		if(urlRequest == null) return false;
+	});
+		
 	//Template button will change according to selection
 	dropdownTemplates.addEventListener('click', function() {
 		var template = dropdownTemplates.value;
@@ -95,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var id = setInterval(frame, 80);
 		function frame() {
 			if (width >= 100) {
-				elem.innerHTML = 'Done!';
+				elem.innerHTML = 'Done! Please Reload.';
 				clearInterval(id);
 			} else {	
 				width++; 			
@@ -106,9 +113,23 @@ document.addEventListener('DOMContentLoaded', function() {
 		}		
 	}
 	
+	function getCorrectUrl(tablink){
+		var urlTemp = tablink.url;		
+		var urlMatch = urlTemp.match(/((https?|ftp|smtp):\/\/)?(www.)?([a-z0-9]+).atlassian/);
+		
+		if(urlMatch == null) {			
+			return false;
+		}
+		
+		var domain = urlMatch[urlMatch.length - 1];
+		urlRequest = templateURL.replace("(domain)", domain);	
+		
+		return urlRequest;
+	}
+	
 	createButton.addEventListener('click', function() {
 		//this can be uncommented to calculate the hours of the sub-tasks
-		//calculateHours(); 
+		//calculateHours(); 		
 		var form = document.getElementById("addbookmark");
 		var isValidForm = form.checkValidity();		
 		var subTasks = document.getElementsByName("t");
@@ -120,14 +141,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		var request = new XMLHttpRequest();
 		var error = document.querySelector('.error');
 		
-		createButton.disabled = true;
-		
+		createButton.disabled = true;		
+
 		if (!isValidForm) {    
 			createButton.disabled = false;
 			form.reportValidity();
 		}
 		
-		request.open("POST","https://iquate.atlassian.net/rest/api/2/issue/bulk",true);
+		if(urlRequest == null) return;
+		
+		request.open("POST", urlRequest, true);
 		request.setRequestHeader("Content-type","application/json");
 		var resp = {"issueUpdates":[]};
 		
@@ -173,9 +196,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			});							
 		});
 		
-		request.send(JSON.stringify(resp));
-		InitProgressBar();
+		request.send(JSON.stringify(resp));		
+		
+		request.onloadend = function() {
+		if (request.status == 200 || request.status == 201 || request.status == 202) {
+			InitProgressBar();
+		} else {
+			alert("Error, please Note: \nThis extension will only work with Jira page opened \n(ie. https://domain.atlassian.net) and logged in.\nPlease reload.");
+		}
+	  };
 	
   }, false);
 }, false);
-
