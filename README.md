@@ -1,5 +1,7 @@
 # Jira Sub-Task Creator 
 
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/acdnmaeifljongleeegkkfnfcopblokj.svg)](https://chrome.google.com/webstore/detail/jira-sub-task-creator/kpkkhaidgijhkojdnfangmdihodjocjm?hl=en&gl=IE)
+
 As a Scrum Master, I had to manually create all the Sub-tasks for the Stories that were Ready for the Sprint.
 
 The process takes some time, having to create 8-10 Sub-tasks for each Story (around 20 per Sprint), 
